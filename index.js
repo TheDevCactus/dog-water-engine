@@ -16,13 +16,13 @@ const objects = [{
     version: '0.0.0'
   },
   position: {
-    x: -150,
-    y: -50,
+    x: 50,
+    y: 50,
     z: 50
   },
   rotation: {
     x: 0,
-    y: 0, 
+    y: 0,
     z: 0,
   },
   color: 'red',
@@ -39,20 +39,11 @@ const renderPoint = (x, y) => {
 }
 
 const renderSegment = (x1, y1, x2, y2) => {
-  const xDiff = Math.abs(x1 - x2);
-  const yDiff = Math.abs(y1 - y2);
   let startX = x1 > x2 ? x2 : x1;
   let endX = x1 > x2 ? x1 : x2;
   let startY = y1 > y2 ? y2 : y1;
   let endY = y1 > y2 ? y1 : y2;
-  let slope = (endY - startY) / (endX - startX);
-
-  if (startY === y2) {
-    slope *= -1;
-    const temp = startY;
-    startY = endY;
-    endY = temp;
-  }
+  let slope = (y2 - y1) / (x2 - x1);
 
   if (slope === Infinity) {
     for (let y = startY; y < endY; y++) {
@@ -61,7 +52,7 @@ const renderSegment = (x1, y1, x2, y2) => {
     return;
   }
 
-  for (let x = startX, y = startY; x < endX; x++, y += slope) {
+  for (let x = startX, y = slope < 0 ? endY : startY; x < endX; x++, y += slope) {
     renderPoint(x, y);
   }
 }
@@ -164,7 +155,8 @@ const loop = () => {
     adjuster *= -1;
     objects[0].position.y = -150;
   }
-  // objects[0].position.y += adjuster;
+  objects[0].position.y += adjuster;
+  objects[0].position.x += adjuster;
 }
 
 loop();
