@@ -16,13 +16,13 @@ const objects = [{
     version: '0.0.0'
   },
   position: {
-    x: 50,
-    y: 50,
+    x: -50,
+    y: -50,
     z: 50
   },
   rotation: {
     x: 0,
-    y: 0,
+    y: 45,
     z: 0,
   },
   color: 'red',
@@ -33,29 +33,13 @@ const objects = [{
   }
 }];
 
-
-const renderPoint = (x, y) => {
-  ctx.fillRect(x, y, 1, 1);
-}
-
 const renderSegment = (x1, y1, x2, y2) => {
-  let startX = x1 > x2 ? x2 : x1;
-  let endX = x1 > x2 ? x1 : x2;
-  let startY = y1 > y2 ? y2 : y1;
-  let endY = y1 > y2 ? y1 : y2;
-  let slope = (y2 - y1) / (x2 - x1);
-
-  if (slope === Infinity) {
-    for (let y = startY; y < endY; y++) {
-      renderPoint(startX, y);
-    }
-    return;
-  }
-
-  for (let x = startX, y = slope < 0 ? endY : startY; x < endX; x++, y += slope) {
-    renderPoint(x, y);
-  }
-}
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.strokeStyle = 'red';
+  ctx.stroke();
+};
 
 const projectWorldPointToScreenPoint = (x, y, z) => {
   const zAdjustedX = z === 0 ? x : x / (z * depthAdjuster);
@@ -115,23 +99,17 @@ const renderObject = (object) => {
     object.position.y + object.size.y,
     object.position.z + object.size.z,
   );
-  renderPoint(...a1);
-  renderPoint(...b1);
-  renderPoint(...c1);
-  renderPoint(...d1);
-  renderPoint(...a2);
-  renderPoint(...b2);
-  renderPoint(...c2);
-  renderPoint(...d2);
 
   renderSegment(...a1, ...a2);
-  renderSegment(...a1, ...b1);
   renderSegment(...b1, ...b2);
+  renderSegment(...c1, ...c2);
+  renderSegment(...d1, ...d2);
+
+  renderSegment(...a1, ...b1);
   renderSegment(...a1, ...c1);
   renderSegment(...b1, ...d1);
-  renderSegment(...c1, ...c2);
   renderSegment(...c1, ...d1);
-  renderSegment(...d1, ...d2);
+
   renderSegment(...a2, ...c2);
   renderSegment(...b2, ...d2);
   renderSegment(...a2, ...b2);
@@ -140,8 +118,6 @@ const renderObject = (object) => {
 
 let adjuster = 1;
 const loop = () => {
-  // console.clear();
-  const startTime = Date.now();
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, 500, 500);
   objects.forEach(renderObject);
@@ -159,16 +135,18 @@ const loop = () => {
   objects[0].position.x += adjuster;
 }
 
+
 loop();
-let interval = setInterval(loop, 1);
-let playing = true;
+
+let playing = false;
+
 function togglePlay() {
   if (playing) {
     clearInterval(interval);
     playing = false;
     return;
   }
-  interval = setInterval(loop, 1);
+  interval = setInterval(loop, 25);
   playing = true;
   return;
 }
