@@ -41,7 +41,7 @@ const renderSegment = (x1, y1, x2, y2) => {
   ctx.stroke();
 };
 
-const projectWorldPointToScreenPoint = (x, y, z) => {
+const projectWorldPointToScreenPoint = (x, y, z, rotX, rotY, rotZ) => {
   const zAdjustedX = z === 0 ? x : x / (z * depthAdjuster);
   const zAdjustedY = z === 0 ? y : y / (z * depthAdjuster);
   const canvasAdjustedX = zAdjustedX + screenWidth / 2;
@@ -55,49 +55,73 @@ const renderObject = (object) => {
   const a1 = projectWorldPointToScreenPoint(
     object.position.x,
     object.position.y,
-    object.position.z
+    object.position.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   const b1 = projectWorldPointToScreenPoint(
     object.position.x + object.size.x,
     object.position.y,
-    object.position.z
+    object.position.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   const c1 = projectWorldPointToScreenPoint(
     object.position.x,
     object.position.y + object.size.y,
-    object.position.z
+    object.position.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   const d1 = projectWorldPointToScreenPoint(
     object.position.x + object.size.x,
     object.position.y + object.size.y,
-    object.position.z
+    object.position.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   const a2 = projectWorldPointToScreenPoint(
     object.position.x,
     object.position.y,
     object.position.z + object.size.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   const b2 = projectWorldPointToScreenPoint(
     object.position.x + object.size.x,
     object.position.y,
     object.position.z + object.size.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   const c2 = projectWorldPointToScreenPoint(
     object.position.x,
     object.position.y + object.size.y,
     object.position.z + object.size.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   const d2 = projectWorldPointToScreenPoint(
     object.position.x + object.size.x,
     object.position.y + object.size.y,
     object.position.z + object.size.z,
+    object.rotation.x,
+    object.rotation.y,
+    object.rotation.z,
   );
 
   renderSegment(...a1, ...a2);
