@@ -2,6 +2,10 @@
 const canvas = document.getElementById('view');
 const ctx = canvas.getContext('2d');
 
+const screenWidth = 400;
+const screenHeight = 400;
+const depthAdjuster = 0.022;
+
 const worldData = {
   baseUnit: 20,
 };
@@ -13,7 +17,7 @@ const objects = [{
   },
   position: {
     x: -150,
-    y: -150,
+    y: -50,
     z: 50
   },
   rotation: {
@@ -25,13 +29,10 @@ const objects = [{
   size: {
     x: 100,
     y: 100,
-    z: 50,
+    z: 100 * (depthAdjuster * 10)
   }
 }];
 
-const screenWidth = 400;
-const screenHeight = 400;
-const depthAdjuster = 0.022;
 
 const renderPoint = (x, y) => {
   ctx.fillRect(x, y, 1, 1);
@@ -149,7 +150,6 @@ const renderObject = (object) => {
 let adjuster = 1;
 const loop = () => {
   // console.clear();
-  console.log('render');
   const startTime = Date.now();
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, 500, 500);
@@ -164,8 +164,7 @@ const loop = () => {
     adjuster *= -1;
     objects[0].position.y = -150;
   }
-  objects[0].position.z += adjuster;
-  objects[0].position.y += adjuster;
+  // objects[0].position.y += adjuster;
 }
 
 loop();
