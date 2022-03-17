@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 
 const screenWidth = 400;
 const screenHeight = 400;
-const depthAdjuster = 0.022;
+const depthAdjuster = 0.01;
 
 const worldData = {
   baseUnit: 20,
@@ -140,23 +140,53 @@ const renderObject = (object) => {
   renderSegment(...c2, ...d2);
 }
 
-let adjuster = 1;
+const keysPressed = {
+  w: false,
+  a: false,
+  s: false,
+  d: false,
+  q: false,
+  e: false,
+};
+
+window.addEventListener('keypress', e => {
+  keysPressed[e.key] = true;
+});
+
+window.addEventListener('keyup', e => {
+  keysPressed[e.key] = false;
+});
+
+let adjuster = 3;
 const loop = () => {
-  ctx.fillStyle = 'black';
+
+  ctx.fillStyle = '#222222';
   ctx.fillRect(0, 0, 500, 500);
   objects.forEach(renderObject);
-  ctx.fillStyle = 'yellow';
-  ctx.fillRect(200, 200, 1, 1);
-  if (objects[0].position.y > 50) {
-    adjuster *= -1;
-    objects[0].position.y = 50;
+
+  const input = [0, 0, 0];
+  if (keysPressed.w) {
+    input[1]--;
   }
-  if (objects[0].position.y < -150) {
-    adjuster *= -1;
-    objects[0].position.y = -150;
+  if (keysPressed.s) {
+    input[1]++;
   }
-  objects[0].position.y += adjuster;
-  objects[0].position.x += adjuster;
+  if (keysPressed.q) {
+    input[2]++;
+  }
+  if (keysPressed.e) {
+    input[2]--;
+  }
+  if (keysPressed.a) {
+    input[0]--;
+  }
+  if (keysPressed.d) {
+    input[0]++;
+  }
+
+  objects[0].position.z += adjuster * input[2];
+  objects[0].position.y += adjuster * input[1];
+  objects[0].position.x += adjuster * input[0];
 }
 
 
@@ -174,3 +204,5 @@ function togglePlay() {
   playing = true;
   return;
 }
+togglePlay();
+
